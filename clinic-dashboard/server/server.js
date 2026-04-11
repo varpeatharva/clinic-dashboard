@@ -11,7 +11,6 @@ const appointmentRoutes = require('./routes/appointmentRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const { sendResponse } = require('./utils/apiResponse');
-const cors = require('cors');
 
 // Connect to MongoDB
 connectDB();
@@ -28,13 +27,7 @@ app.use(cors({
   credentials: true
 }));
 
-// CORS — allow frontend
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
-    credentials: true,
-  })
-);
+
 
 // Body parser
 app.use(express.json({ limit: '10kb' }));
