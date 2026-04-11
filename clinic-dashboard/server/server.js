@@ -11,6 +11,7 @@ const appointmentRoutes = require('./routes/appointmentRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const { sendResponse } = require('./utils/apiResponse');
+const cors = require('cors');
 
 // Connect to MongoDB
 connectDB();
@@ -19,6 +20,10 @@ const app = express();
 
 // Security headers
 app.use(helmet());
+
+app.use(cors({
+  origin: 'https://healix-erdos.vercel.app'
+}));
 
 // CORS — allow frontend
 app.use(
