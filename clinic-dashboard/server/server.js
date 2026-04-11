@@ -21,8 +21,11 @@ const app = express();
 // Security headers
 app.use(helmet());
 
+import cors from "cors";
+
 app.use(cors({
-  origin: 'https://healix-erdos.vercel.app'
+  origin: "https://healix-erdos.vercel.app", // your frontend
+  credentials: true
 }));
 
 // CORS — allow frontend
