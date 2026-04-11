@@ -176,11 +176,9 @@ export default function PatientPortal() {
                         <p className="text-xs text-slate-500">{appt.visit_type}</p>
                       </div>
                     </div>
-                    {/* The patient name from the schedule is purposely kept subtle or could be omitted for true anonymity, 
-                        but we assume clinic allows transparency for now as per user request */}
-                    {appt.patient_id?.name ? (
+                    {appt.patient_id ? (
                       <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-1 rounded">
-                        Booked
+                        Occupied
                       </span>
                     ) : (
                       <span className="text-[10px] text-emerald-500 font-medium">Available</span>

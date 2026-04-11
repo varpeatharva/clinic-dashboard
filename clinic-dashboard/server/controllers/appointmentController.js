@@ -28,26 +28,29 @@ const getAppointments = async (req, res) => {
     const { page = 1, limit = 10, sortBy = 'appointment_date', sortOrder = 'desc' } = req.query;
     const filter = buildFilterQuery(req.query);
 
+    let populateFields = 'name patient_id';
+
     if (req.user.role === 'patient') {
       if (req.query.scope === 'mine') {
         filter.patient_id = req.user.patient_ref;
       } else {
-        // Force viewing to today only for schedules
+        // Force viewing to today only for general clinic schedules
         const todayStr = req.query.localToday || new Date().toISOString().split('T')[0];
         filter.appointment_date = {
           $gte: new Date(`${todayStr}T00:00:00.000Z`),
           $lte: new Date(`${todayStr}T23:59:59.999Z`),
         };
+        // Security: Don't send other patients' names to a patient user
+        populateFields = 'patient_id'; 
       }
     }
-
 
     const skip = (Number(page) - 1) * Number(limit);
     const sort = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
 
     const [appointments, total] = await Promise.all([
       Appointment.find(filter)
-        .populate('patient_id', 'name patient_id')
+        .populate('patient_id', populateFields)
         .sort(sort)
         .skip(skip)
         .limit(Number(limit)),
