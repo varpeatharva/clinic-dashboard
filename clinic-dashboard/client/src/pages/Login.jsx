@@ -183,7 +183,7 @@ export default function Login() {
               <div className="space-y-1 text-[11px] text-slate-400">
                 <p>🔑 Admin: <span className="text-slate-300">admin@clinic.com / Admin@1234</span></p>
                 <p>🩺 Staff: <span className="text-slate-300">staff@clinic.com / Staff@1234</span></p>
-                <p>👤 Patient: <span className="text-slate-300">patient@clinic.com / 12345678</span></p>
+                <p>👤 Patient: <span className="text-slate-300">aisha@patient.com / 12345678</span></p>
               </div>
             </div>
           )}

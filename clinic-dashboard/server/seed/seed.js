@@ -213,20 +213,11 @@ const seedDB = async () => {
     ]);
     console.log('🗑  Cleared existing collections');
 
-    // ── Seed Users ──────────────────────────────────────────────────────────
-    const adminPass  = await bcrypt.hash('Admin@1234', 10);
-    const staffPass  = await bcrypt.hash('Staff@1234', 10);
-
-    await User.insertMany([
-      { name: 'Admin Manager', email: 'admin@clinic.com', password: adminPass, role: 'admin' },
-      { name: 'Staff Member',  email: 'staff@clinic.com', password: staffPass, role: 'staff' },
-    ]);
-    console.log('✅ Seeded 2 users  (admin@clinic.com / Admin@1234  |  staff@clinic.com / Staff@1234)');
-
     // ── Seed Patients ───────────────────────────────────────────────────────
     const patientDocs = Object.entries(PATIENT_MAP).map(([pid, name]) => ({
       patient_id: Number(pid),
       name,
+      email: `${name.toLowerCase().replace(/\s/g, '')}@patient.com`,
     }));
     const insertedPatients = await Patient.insertMany(patientDocs);
     console.log(`✅ Seeded ${insertedPatients.length} patients`);
@@ -234,6 +225,27 @@ const seedDB = async () => {
     // Build patient_id → ObjectId map
     const pidToOid = {};
     insertedPatients.forEach((p) => (pidToOid[p.patient_id] = p._id));
+
+    // ── Seed Users ──────────────────────────────────────────────────────────
+    const adminPass  = await bcrypt.hash('Admin@1234', 10);
+    const staffPass  = await bcrypt.hash('Staff@1234', 10);
+    const patientPass = await bcrypt.hash('12345678', 10);
+
+    const coreUsers = [
+      { name: 'Admin Manager', email: 'admin@clinic.com', password: adminPass, role: 'admin' },
+      { name: 'Staff Member',  email: 'staff@clinic.com', password: staffPass, role: 'staff' },
+    ];
+
+    const patientUsers = insertedPatients.map(p => ({
+      name: p.name,
+      email: p.email,
+      password: patientPass,
+      role: 'patient',
+      patient_ref: p._id
+    }));
+
+    await User.insertMany([...coreUsers, ...patientUsers]);
+    console.log(`✅ Seeded ${2 + patientUsers.length} users (including all dummy patients with password: '12345678')`);
 
     // ── Seed Appointments ───────────────────────────────────────────────────
     const appointmentDocs = RAW_APPOINTMENTS.map((r) => ({
