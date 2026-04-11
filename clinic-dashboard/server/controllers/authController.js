@@ -11,7 +11,7 @@ const generateToken = (res, userId) => {
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
     maxAge: 24 * 60 * 60 * 1000, // 1 day
   });
   return token;
@@ -98,7 +98,12 @@ const login = async (req, res) => {
 // @route POST /api/auth/logout
 // @access Private
 const logout = (req, res) => {
-  res.cookie('token', '', { httpOnly: true, expires: new Date(0) });
+  res.cookie('token', '', { 
+    httpOnly: true, 
+    expires: new Date(0),
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict'
+  });
   return sendResponse(res, 200, true, 'Logged out successfully.');
 };
 
