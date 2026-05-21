@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const User = require('./models/User');
-const Patient = require('./models/Patient');
-require('dotenv').config();
+const User = require('../models/User');
+const Patient = require('../models/Patient');
+require('dotenv').config({ path: '../.env' });
 
 async function createDemoPatient() {
   try {
@@ -11,7 +11,7 @@ async function createDemoPatient() {
     // 1. Create Patient Record
     const lastPatient = await Patient.findOne().sort({ patient_id: -1 });
     const patient_id = lastPatient ? lastPatient.patient_id + 1 : 1;
-    
+
     // Check if patient exists first
     const existingUser = await User.findOne({ email: 'patient@clinic.com' });
     if (existingUser) {
@@ -34,7 +34,7 @@ async function createDemoPatient() {
       role: 'patient',
       patient_ref: newPatient._id
     });
-    
+
     await newUser.save();
     console.log('User account created successfully!');
 

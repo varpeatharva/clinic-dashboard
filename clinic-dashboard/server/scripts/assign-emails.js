@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const User = require('./models/User');
-const Patient = require('./models/Patient');
-require('dotenv').config();
+const User = require('../models/User');
+const Patient = require('../models/Patient');
+require('dotenv').config({ path: '../.env' });
 
 async function assignEmailsAndUsers() {
   try {
@@ -14,7 +13,7 @@ async function assignEmailsAndUsers() {
 
     let createdUsers = 0;
     let updatedUsers = 0;
-    const defaultPassword = '12345678'; // Warning: Will be hashed by pre-save hook on User model
+    const defaultPassword = '12345678'; // Will be hashed by pre-save hook on User model
 
     for (const patient of patients) {
       // 1. Ensure Patient has an email

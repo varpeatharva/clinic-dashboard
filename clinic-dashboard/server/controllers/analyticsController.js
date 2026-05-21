@@ -1,4 +1,5 @@
 const Appointment = require('../models/Appointment');
+const { TIME_SLOTS, PEAK_SLOTS } = require('../constants/clinic');
 const { sendResponse } = require('../utils/apiResponse');
 
 // Build a shared filter from query params
@@ -168,7 +169,7 @@ const getByVisitType = async (req, res) => {
 const getByTimeSlot = async (req, res) => {
   try {
     const filter = buildFilter(req.query);
-    const ALL_SLOTS = ['09:00','09:30','10:00','11:00','12:00','14:00','15:30','16:00'];
+    const ALL_SLOTS = TIME_SLOTS;
 
     const data = await Appointment.aggregate([
       { $match: filter },
@@ -181,7 +182,7 @@ const getByTimeSlot = async (req, res) => {
     const result = ALL_SLOTS.map((slot) => ({
       time: slot,
       count: countMap[slot] || 0,
-      isPeak: ['11:00', '14:00', '10:00'].includes(slot),
+      isPeak: PEAK_SLOTS.includes(slot),
     }));
 
     return sendResponse(res, 200, true, 'Time slot data fetched.', result);

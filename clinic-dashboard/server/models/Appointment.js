@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { DOCTORS, TIME_SLOTS, VISIT_TYPES, STATUSES } = require('../constants/clinic');
 
 const appointmentSchema = new mongoose.Schema(
   {
@@ -6,23 +7,23 @@ const appointmentSchema = new mongoose.Schema(
     patient_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
     doctor: {
       type: String,
-      enum: ['Dr Shah', 'Dr Lewis', 'Dr Ahmed'],
+      enum: DOCTORS,
       required: [true, 'Doctor is required'],
     },
     appointment_date: { type: Date, required: [true, 'Appointment date is required'] },
     appointment_time: {
       type: String,
-      enum: ['09:00', '09:30', '10:00', '11:00', '12:00', '14:00', '15:30', '16:00'],
+      enum: TIME_SLOTS,
       required: [true, 'Appointment time is required'],
     },
     status: {
       type: String,
-      enum: ['Scheduled', 'Completed', 'Cancelled', 'No Show'],
+      enum: STATUSES,
       default: 'Scheduled',
     },
     visit_type: {
       type: String,
-      enum: ['Check-up', 'Vaccination', 'Follow-up', 'Consultation'],
+      enum: VISIT_TYPES,
       required: [true, 'Visit type is required'],
     },
   },
