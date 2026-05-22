@@ -6,7 +6,7 @@ const { sendResponse } = require('../utils/apiResponse');
 // @access Private (Admin only)
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    const users = await User.find({ role: { $in: ['admin', 'staff'] } }).select('-password').sort({ createdAt: -1 });
     return sendResponse(res, 200, true, 'Users fetched.', users);
   } catch (error) {
     return sendResponse(res, 500, false, error.message);
